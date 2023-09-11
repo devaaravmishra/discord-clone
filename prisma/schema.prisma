@@ -37,7 +37,7 @@ model Server {
   inviteCode String @db.Text
 
   profileId String
-  Profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
   members  Membership[]
   channels Channel[]
@@ -59,7 +59,7 @@ model Membership {
   role MembershipRole @default(GUEST)
 
   profileId String
-  Profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
   serverId String
   Server   Server @relation(fields: [serverId], references: [id], onDelete: Cascade)
@@ -83,7 +83,7 @@ model Channel {
   type ChannelType @default(TEXT)
 
   profileId String
-  Profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
   serverId String
   Server   Server @relation(fields: [serverId], references: [id], onDelete: Cascade)
