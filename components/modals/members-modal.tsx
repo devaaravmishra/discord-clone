@@ -36,7 +36,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MembershipRole } from "@prisma/client";
+import { MemberRole } from "@prisma/client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
@@ -56,7 +56,7 @@ const MembersModal = () => {
   const isModalOpen = isOpen && type === "members";
   const { server } = data as { server: ServerWithMembersWithProfiles };
 
-  const onRoleChange = async (memberId: string, role: MembershipRole) => {
+  const onRoleChange = async (memberId: string, role: MemberRole) => {
     try {
       setLoadingId(memberId);
       const url = qs.stringifyUrl({

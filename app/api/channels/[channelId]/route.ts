@@ -1,6 +1,6 @@
 import { currentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
-import { MembershipRole } from "@prisma/client";
+import { MemberRole } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 export async function DELETE(
@@ -34,7 +34,7 @@ export async function DELETE(
           some: {
             profileId: profile.id,
             role: {
-              in: [MembershipRole.ADMIN, MembershipRole.MODERATOR],
+              in: [MemberRole.ADMIN, MemberRole.MODERATOR],
             },
           },
         },
@@ -97,7 +97,7 @@ export async function PATCH(
           some: {
             profileId: profile.id,
             role: {
-              in: [MembershipRole.ADMIN, MembershipRole.MODERATOR],
+              in: [MemberRole.ADMIN, MemberRole.MODERATOR],
             },
           },
         },

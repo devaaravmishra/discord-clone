@@ -1,5 +1,5 @@
-import { Membership, Profile, Server } from "@prisma/client";
+import { Member, Profile, Server } from "@prisma/client";
 
 export type ServerWithMembersWithProfiles = Server & {
-  members: (Membership & { profile: Profile })[];
+  members: (Member & { profile: Profile })[];
 };

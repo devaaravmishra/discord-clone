@@ -23,7 +23,7 @@ model Profile {
   email    String @unique @db.Text
 
   servers  Server[]
-  members  Membership[]
+  members  Member[]
   channels Channel[]
 
   createdAt DateTime @default(now())
@@ -39,7 +39,7 @@ model Server {
   profileId String
   profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
-  members  Membership[]
+  members  Member[]
   channels Channel[]
 
   createdAt DateTime @default(now())
@@ -48,15 +48,17 @@ model Server {
   @@index([profileId])
 }
 
-enum MembershipRole {
+enum MemberRole {
   ADMIN
   MODERATOR
   GUEST
+
+  @@map("MemberRole")
 }
 
-model Membership {
-  id   String         @id @default(uuid())
-  role MembershipRole @default(GUEST)
+model Member {
+  id   String     @id @default(uuid())
+  role MemberRole @default(GUEST)
 
   profileId String
   profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
@@ -69,6 +71,7 @@ model Membership {
 
   @@index([profileId])
   @@index([serverId])
+  @@map("Member")
 }
 
 enum ChannelType {

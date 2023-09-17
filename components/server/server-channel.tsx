@@ -3,14 +3,14 @@
 import { ActionTooltip } from "@/components/action-tooltip";
 import { useModal } from "@/hooks/use-modal-store";
 import { cn } from "@/lib/utils";
-import { Channel, ChannelType, MembershipRole, Server } from "@prisma/client";
+import { Channel, ChannelType, MemberRole, Server } from "@prisma/client";
 import { Edit, Hash, Lock, Mic, Trash, Video } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 
 interface ServerChannelProps {
   channel: Channel;
   server: Server;
-  role?: MembershipRole;
+  role?: MemberRole;
 }
 
 const icons = {
@@ -49,7 +49,7 @@ const ServerChannel = ({ channel, server, role }: ServerChannelProps) => {
       >
         {channel.name}
       </p>
-      {channel.name !== "general" && role !== MembershipRole.GUEST && (
+      {channel.name !== "general" && role !== MemberRole.GUEST && (
         <div className="flex items-center gap-x-2 ml-auto">
           <ActionTooltip label="Edit">
             <Edit

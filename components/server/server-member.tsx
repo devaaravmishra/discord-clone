@@ -5,20 +5,18 @@ import { useParams, useRouter } from "next/navigation";
 
 import UserAvatar from "@/components/user-avatar";
 import { cn } from "@/lib/utils";
-import { Membership, MembershipRole, Profile, Server } from "@prisma/client";
+import { Member, MemberRole, Profile, Server } from "@prisma/client";
 
 const roleIcons = {
-  [MembershipRole.GUEST]: null,
-  [MembershipRole.ADMIN]: (
-    <ShieldAlert className="h-4 w-4 mr-2 text-rose-500" />
-  ),
-  [MembershipRole.MODERATOR]: (
+  [MemberRole.GUEST]: null,
+  [MemberRole.ADMIN]: <ShieldAlert className="h-4 w-4 mr-2 text-rose-500" />,
+  [MemberRole.MODERATOR]: (
     <ShieldCheck className="h-4 w-4 mr-2 text-indigo-500" />
   ),
 };
 
 interface ServerMemberProps {
-  member: Membership & { profile: Profile };
+  member: Member & { profile: Profile };
   server: Server;
 }
 

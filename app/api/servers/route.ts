@@ -3,7 +3,7 @@ import { v4 as uuidV4 } from "uuid";
 
 import { currentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
-import { MembershipRole } from "@prisma/client";
+import { MemberRole } from "@prisma/client";
 
 export async function POST(req: Request, res: Response) {
   try {
@@ -36,7 +36,7 @@ export async function POST(req: Request, res: Response) {
           create: [
             {
               profileId: profile.id,
-              role: MembershipRole.ADMIN,
+              role: MemberRole.ADMIN,
             },
           ],
         },
