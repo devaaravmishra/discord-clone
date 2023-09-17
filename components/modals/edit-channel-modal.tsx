@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import qs from "query-string";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -34,6 +34,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useModal } from "@/hooks/use-modal-store";
+import { useEffect } from "react";
 
 const formSchema = z.object({
   name: z
@@ -48,22 +49,22 @@ const formSchema = z.object({
   type: z.nativeEnum(ChannelType),
 });
 
-const CreateChannelModal = () => {
+const EditChannelModal = () => {
   const { isOpen, onClose, type, data } = useModal();
 
   const router = useRouter();
-  const params = useParams();
 
-  const { channelType } = data;
+  const { channel, server } = data;
 
-  const isModalOpen = isOpen && type === "createChannel";
+  const isModalOpen = isOpen && type === "editChannel";
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      type: ChannelType.TEXT,
+      type: channel?.type || ChannelType.TEXT,
     },
+    progressive: true,
   });
 
   const isLoading = form.formState.isSubmitting;
@@ -71,14 +72,13 @@ const CreateChannelModal = () => {
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
       const url = qs.stringifyUrl({
-        url: "/api/channels",
+        url: `/api/channels/${channel?.id}`,
         query: {
-          serverId: params?.serverId,
+          serverId: server?.id,
         },
       });
-      await axios.post(url, data);
+      await axios.patch(url, data);
 
-      form.reset();
       onClose();
       router.refresh();
     } catch (error) {
@@ -91,12 +91,19 @@ const CreateChannelModal = () => {
     onClose();
   };
 
+  useEffect(() => {
+    if (channel) {
+      form.setValue("name", channel?.name);
+      form.setValue("type", channel?.type);
+    }
+  }, [channel, form]);
+
   return (
     <Dialog open={isModalOpen} onOpenChange={handleClose}>
       <DialogContent className="bg-white text-black p-0 overflow-hidden">
         <DialogHeader className="pt-6 px-6">
           <DialogTitle className="text-2xl font-bold text-center">
-            Create Channel
+            Edit Channel
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
@@ -134,7 +141,7 @@ const CreateChannelModal = () => {
                     <Select
                       disabled={isLoading}
                       onValueChange={field.onChange}
-                      defaultValue={channelType || field.value}
+                      defaultValue={channel?.type || field.value}
                     >
                       <FormControl>
                         <SelectTrigger className="bg-zinc-300/50 border-0 focus:ring-0 text-black ring-offset-0 capitalize outline-none">
@@ -165,7 +172,7 @@ const CreateChannelModal = () => {
                 className="w-full"
                 variant="primary"
               >
-                Create
+                Edit
               </Button>
             </DialogFooter>
           </form>
@@ -175,4 +182,4 @@ const CreateChannelModal = () => {
   );
 };
 
-export default CreateChannelModal;
+export default EditChannelModal;
