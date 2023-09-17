@@ -86,7 +86,7 @@ model Channel {
   profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
   serverId String
-  Server   Server @relation(fields: [serverId], references: [id], onDelete: Cascade)
+  server   Server @relation(fields: [serverId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
