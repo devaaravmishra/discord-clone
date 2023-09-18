@@ -48,6 +48,8 @@
 		"react-dropzone": "^14.2.3",
 		"react-hook-form": "^7.46.1",
 		"shadcn-ui": "^0.3.0",
+		"socket.io": "^4.7.2",
+		"socket.io-client": "^4.7.2",
 		"tailwind-merge": "^1.14.0",
 		"tailwindcss": "3.3.3",
 		"tailwindcss-animate": "^1.0.7",
