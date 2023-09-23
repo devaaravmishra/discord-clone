@@ -115,7 +115,7 @@ const ChatItem = ({
 
 	useEffect(() => {
 		const handleKeyDown = (e: KeyboardEvent) => {
-			if (e.key === "Escape" || e.keyCode === 27) {
+			if (e.key === "Escape" || e.key === "Enter") {
 				setIsEditiing(false);
 			}
 		};
