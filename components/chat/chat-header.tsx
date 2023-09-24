@@ -27,8 +27,8 @@ const ChatHeader = ({ name, serverId, type, imageUrl }: ChatHeaderProps) => {
 			)}
 			<p className="font-semibold text-md text-black dark:text-white">{name}</p>
 			<div className="flex items-center ml-auto">
+				{type === "conversation" && <ChatVideoButton />}
 				<SocketIndicator />
-				<ChatVideoButton />
 			</div>
 		</div>
 	);
