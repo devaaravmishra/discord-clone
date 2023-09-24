@@ -2,4 +2,15 @@
 
 . "$(dirname "$0")/_/husky.sh"
 
+
+# Exit if any command fails
+set -e
+
+# Run ESLint
+echo "Running ESLint..."
 bunx lint-staged
+
+
+# Run Commitlint
+echo "Running Commitlint..."
+bunx commitlint --edit "$1"undefined
