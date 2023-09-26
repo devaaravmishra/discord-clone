@@ -63,6 +63,75 @@ LIVEKIT_API_KEY=livekit_api_key
 NEXT_PUBLIC_LIVEKIT_URL=wss://discord-clone.livekit.cloud
 ```
 
+## Roadmap
+
+Here's a roadmap outlining the planned features and improvements for my Discord clone application.
+
+- [x] **Voice Chat Integration**
+
+  - Implement real-time voice chat functionality for seamless communication.
+
+- [x] **Video Chat Support**
+
+  - Introduce video chat features for face-to-face conversations.
+
+- [x] **Screen Sharing**
+
+  - Enable screen sharing during calls for collaborative interactions.
+
+- [x] **Direct Messaging**
+
+  - Allow users to send private messages to other users.
+
+- [x] **Message Editing**
+
+  - Allow users to edit their messages in real-time.
+
+- [ ] **Real-time Typing Indicators**
+
+  - Display the typing status of users in real-time.
+
+- [ ] **Emojify Your Messages**
+
+  - Allow users to react to messages with emojis. Also, display the number of reactions.
+
+- [ ] **Stay in the Loop**
+
+  - Display the online status of users and their last active time.
+
+- [ ] **Server Discovery**
+
+  - Create a server discovery mechanism to help users find and join communities.
+
+- [ ] **Server Categories**
+
+  - Allow users to categorize their servers for better organization.
+
+- [ ] **Rich Media Integration**
+
+  - Improve media sharing capabilities, including support for gifs, videos, and link previews.
+
+- [ ] **Custom Emojis and Stickers**
+
+  - Allow users to personalize their messages with custom emojis and stickers.
+
+- [ ] **Server Bots**
+
+  - Integrate a bot API or allow users to add custom bots to their servers.
+
+- [ ] **User Feedback and Bug Reporting**
+
+  - Establish a feedback and bug reporting system to gather user input and improve the app.
+
+- [ ] **Notifications**
+
+  - Implement a notification system to keep users updated on new messages and events.
+
+- [ ] **Localization**
+  - Add support for multiple languages to cater to a global audience.
+
+This roadmap is a dynamic plan that I'll continually update as I progress and gather feedback from everyone. If you have any suggestions or feature requests, please feel free to open an issue or submit a pull request.
+
 ## Contributing
 
 We welcome contributions to this Discord Clone repository! If you find any bugs or issues, feel free to open an issue or submit a pull request. I also encourage you to add new features and improve the existing codebase.
