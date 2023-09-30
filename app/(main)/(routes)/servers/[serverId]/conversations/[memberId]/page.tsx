@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import ChatHeader from "@/components/chat/chat-header";
 import ChatInput from "@/components/chat/chat-input";
 import ChatMessages from "@/components/chat/chat-messages";
+import ChatTypingWrapper from "@/components/chat/chat-typing-wrapper";
 import MediaRoom from "@/components/media-room";
 import { getOrCreateConversation } from "@/lib/conversation";
 import { currentProfile } from "@/lib/current-profile";
@@ -77,6 +78,11 @@ const MemberIdPage = async ({ params, searchParams }: MemberIdPageProps) => {
 						socketUrl="/api/socket/direct-messages"
 						type="conversation"
 					/>
+					<ChatTypingWrapper
+						conversationId={conversation.id}
+						type="conversation"
+						member={otherMember}
+					/>
 					<ChatInput
 						name={otherMember.profile.name}
 						apiUrl="/api/socket/direct-messages"
@@ -84,6 +90,7 @@ const MemberIdPage = async ({ params, searchParams }: MemberIdPageProps) => {
 							conversationId: conversation.id,
 						}}
 						type="conversation"
+						profileId={profile.id}
 					/>
 				</>
 			)}

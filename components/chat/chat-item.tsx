@@ -72,8 +72,8 @@ const ChatItem = ({
 		},
 	});
 
-	const isAdmin = member.role === MemberRole.ADMIN;
-	const isModerator = member.role === MemberRole.MODERATOR;
+	const isAdmin = currentMember.role === MemberRole.ADMIN;
+	const isModerator = currentMember.role === MemberRole.MODERATOR;
 	const isOwner = member.id === currentMember.id;
 	const canDeleteMessage = !deleted && (isAdmin || isModerator || isOwner);
 	const canEditMessage = !deleted && isOwner && !fileUrl;
@@ -141,7 +141,7 @@ const ChatItem = ({
 						<div className="flex items-center">
 							<p
 								onClick={onMemberClick}
-								className="text-sm font-semibold hover:underline cursor-pointer"
+								className="text-sm font-semibold hover:underline cursor-pointer mr-1"
 							>
 								{member.profile.name}
 							</p>

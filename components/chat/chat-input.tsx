@@ -12,21 +12,33 @@ import EmojiPicker from "@/components/emoji-picker";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useModal } from "@/hooks/use-modal-store";
+import { useCallback, useRef } from "react";
+import { useSocket } from "../providers/socket-provider";
 
 interface ChatInputProps {
 	apiUrl: string;
 	query: Record<string, string>;
 	name: string;
 	type: "conversation" | "channel";
+	profileId: string;
 }
 
 const formSchema = z.object({
 	content: z.string().nonempty(),
 });
 
-const ChatInput = ({ apiUrl, name, query, type }: ChatInputProps) => {
+const ChatInput = ({
+	apiUrl,
+	name,
+	query,
+	type,
+	profileId,
+}: ChatInputProps) => {
 	const router = useRouter();
 	const { onOpen } = useModal();
+	const { socket } = useSocket();
+
+	const timeoutRef = useRef<NodeJS.Timeout>();
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -48,6 +60,39 @@ const ChatInput = ({ apiUrl, name, query, type }: ChatInputProps) => {
 			console.error("[ChatInput onSubmit]", error);
 		}
 	};
+
+	const handleTyping = useCallback(
+		(isTyping: boolean) => {
+			let key = "typing";
+
+			if (type.includes("conversation")) {
+				socket?.emit(key, {
+					profileId,
+					conversationId: query.conversationId,
+					isTyping,
+				});
+			}
+
+			if (type.includes("channel")) {
+				socket?.emit(key, {
+					profileId,
+					channelId: query.channelId,
+					isTyping,
+				});
+			}
+		},
+		[profileId, query.channelId, query.conversationId, socket, type],
+	);
+
+	const whenToStopTyping = useCallback(() => {
+		if (timeoutRef.current) {
+			clearTimeout(timeoutRef.current);
+		}
+
+		timeoutRef.current = setTimeout(() => {
+			handleTyping(false);
+		}, 2000);
+	}, [handleTyping]);
 
 	return (
 		<Form {...form}>
@@ -75,6 +120,13 @@ const ChatInput = ({ apiUrl, name, query, type }: ChatInputProps) => {
 											type === "channel" ? "#" : ""
 										}${name}`}
 										{...field}
+										onChange={(event) => {
+											field.onChange(event.target.value);
+
+											handleTyping(true);
+
+											whenToStopTyping();
+										}}
 									/>
 									<div className="absolute top-7 right-8">
 										<EmojiPicker

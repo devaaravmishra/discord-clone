@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import ChatHeader from "@/components/chat/chat-header";
 import ChatInput from "@/components/chat/chat-input";
 import ChatMessages from "@/components/chat/chat-messages";
+import ChatTypingWrapper from "@/components/chat/chat-typing-wrapper";
 import MediaRoom from "@/components/media-room";
 import { currentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
@@ -29,12 +30,26 @@ const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
 		where: {
 			id: channelId,
 		},
+		include: {
+			server: {
+				include: {
+					members: {
+						include: {
+							profile: true,
+						},
+					},
+				},
+			},
+		},
 	});
 
 	const member = await db.member.findFirst({
 		where: {
 			serverId,
 			profileId: profile.id,
+		},
+		include: {
+			profile: true,
 		},
 	});
 
@@ -58,11 +73,18 @@ const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
 						chatId={channelId}
 						member={member}
 					/>
+					<ChatTypingWrapper
+						channelId={channelId}
+						type="channel"
+						currentMember={member}
+						serverMembers={channel.server.members}
+					/>
 					<ChatInput
 						name={channel?.name}
 						type="channel"
 						apiUrl="/api/socket/messages"
 						query={{ channelId, serverId }}
+						profileId={profile.id}
 					/>
 				</>
 			)}
