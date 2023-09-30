@@ -50,7 +50,7 @@ export default async function handler(
 		const channel = await db.channel.findFirst({
 			where: {
 				id: channelId as string,
-				serverId: server.id,
+				serverId: serverId as string,
 			},
 		});
 
@@ -70,7 +70,7 @@ export default async function handler(
 			data: {
 				content,
 				fileUrl,
-				channelId: channel.id,
+				channelId: channelId as string,
 				memberId: member.id,
 			},
 			include: {
@@ -83,7 +83,7 @@ export default async function handler(
 		});
 
 		// Emit the message to the server
-		const channelKey = `Chat:${channel.id}:messages`;
+		const channelKey = `chat:${channelId}:messages`;
 
 		res?.socket?.server?.io?.emit(channelKey, message);
 

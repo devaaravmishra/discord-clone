@@ -71,7 +71,7 @@ export default async function handler(
 		let directMessage = await db.directMessage.findFirst({
 			where: {
 				id: directMessageId as string,
-				conversationId: conversation.id,
+				conversationId: conversationId as string,
 			},
 			include: {
 				member: {
@@ -99,7 +99,7 @@ export default async function handler(
 			directMessage = await db.directMessage.update({
 				// soft delete
 				where: {
-					id: directMessage.id,
+					id: directMessageId as string,
 				},
 				data: {
 					deleted: true,
@@ -127,7 +127,7 @@ export default async function handler(
 
 			directMessage = await db.directMessage.update({
 				where: {
-					id: directMessage.id,
+					id: directMessageId as string,
 				},
 				data: {
 					content,
@@ -143,7 +143,7 @@ export default async function handler(
 		}
 
 		// Emit the message to all clients in the channel
-		const updateKey = `chat:${conversationId}:messages:update`;
+		const updateKey = `chat:${conversation?.id}:messages:update`;
 
 		res?.socket?.server?.io.emit(updateKey, directMessage);
 

@@ -20,6 +20,15 @@ const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIo) => {
 			addTrailingSlash: false,
 		});
 
+		io.on("connection", (socket) => {
+			console.log("socket connected");
+
+			// Typing event
+			socket.on("typing", (data) => {
+				socket.broadcast.emit("typing", data);
+			});
+		});
+
 		res.socket.server.io = io;
 	}
 

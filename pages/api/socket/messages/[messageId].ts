@@ -46,7 +46,7 @@ export default async function handler(
 		const channel = await db.channel.findFirst({
 			where: {
 				id: channelId as string,
-				serverId: server.id,
+				serverId: serverId as string,
 			},
 		});
 
@@ -65,7 +65,7 @@ export default async function handler(
 		let message = await db.message.findFirst({
 			where: {
 				id: messageId as string,
-				channelId: channel.id,
+				channelId: channelId as string,
 			},
 			include: {
 				member: {
@@ -93,7 +93,7 @@ export default async function handler(
 			message = await db.message.update({
 				// soft delete
 				where: {
-					id: message.id,
+					id: messageId as string,
 				},
 				data: {
 					deleted: true,
@@ -121,7 +121,7 @@ export default async function handler(
 
 			message = await db.message.update({
 				where: {
-					id: message.id,
+					id: messageId as string,
 				},
 				data: {
 					content,
@@ -137,11 +137,11 @@ export default async function handler(
 		}
 
 		// Emit the message to all clients in the channel
-		const updateKey = `chat:${channel.id}:messages:update`;
+		const updateKey = `chat:${channelId}:messages:update`;
 
-		res?.socket?.server?.io.emit(updateKey, message);
+		res?.socket?.server?.io?.emit(updateKey, message);
 
-		return res.status(200).json({ message });
+		return res.status(200).json(message);
 	} catch (error) {
 		console.error("[MESSAGE_ID] ERROR", error);
 		return res.status(500).json({ message: "Internal server error" });

@@ -76,7 +76,7 @@ export default async function handler(
 			data: {
 				content,
 				fileUrl,
-				conversationId: conversation.id,
+				conversationId: conversationId as string,
 				memberId: member.id,
 			},
 			include: {
@@ -89,7 +89,7 @@ export default async function handler(
 		});
 
 		// Emit the message to the server
-		const channelKey = `Chat:${conversationId}:messages`;
+		const channelKey = `chat:${conversationId}:messages`;
 
 		res?.socket?.server?.io?.emit(channelKey, message);
 
