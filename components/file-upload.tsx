@@ -8,28 +8,22 @@ import { UploadDropzone } from "@/lib/uploadthing";
 import "@uploadthing/react/styles.css";
 
 interface FileUploadProps {
-	onChange: (url: string) => void;
+	onChange: (url?: string) => void;
 	value: string;
 	endpoint: "messageFile" | "serverImage";
 }
 
-const FileUpload = ({ endpoint, onChange, value }: FileUploadProps) => {
+const FileUpload = ({ onChange, value, endpoint }: FileUploadProps) => {
 	const fileType = value?.split(".").pop();
 
 	if (value && fileType !== "pdf") {
 		return (
 			<div className="relative h-20 w-20">
-				<Image
-					src={value}
-					layout="fill"
-					objectFit="cover"
-					alt="Uploaded image"
-					className="rounded-full"
-				/>
+				<Image fill src={value} alt="Upload" className="rounded-full" />
 				<button
-					className="absolute top-0 right-0 p-1 bg-rose-500 text-white rounded-full shadow-sm"
-					type="button"
 					onClick={() => onChange("")}
+					className="bg-rose-500 text-white p-1 rounded-full absolute top-0 right-0 shadow-sm"
+					type="button"
 				>
 					<X className="h-4 w-4" />
 				</button>
@@ -44,15 +38,15 @@ const FileUpload = ({ endpoint, onChange, value }: FileUploadProps) => {
 				<a
 					href={value}
 					target="_blank"
-					rel="noopener norefferrer"
+					rel="noopener noreferrer"
 					className="ml-2 text-sm text-indigo-500 dark:text-indigo-400 hover:underline"
 				>
 					{value}
 				</a>
 				<button
-					className="absolute -top-2 -right-2 p-1 bg-rose-500 text-white rounded-full shadow-sm"
-					type="button"
 					onClick={() => onChange("")}
+					className="bg-rose-500 text-white p-1 rounded-full absolute -top-2 -right-2 shadow-sm"
+					type="button"
 				>
 					<X className="h-4 w-4" />
 				</button>
@@ -61,17 +55,18 @@ const FileUpload = ({ endpoint, onChange, value }: FileUploadProps) => {
 	}
 
 	return (
-		<div>
-			<UploadDropzone
-				endpoint={endpoint}
-				onClientUploadComplete={(res) => {
-					onChange(res?.[0]?.url as string);
-				}}
-				onUploadError={(err) => {
-					console.error(err);
-				}}
-			/>
-		</div>
+		<UploadDropzone
+			endpoint={endpoint}
+			onClientUploadComplete={(res) => {
+				onChange(res?.[0].url);
+			}}
+			onUploadError={(error: Error) => {
+				console.log(
+					"🚀 ~ file: file-upload.tsx:64 ~ FileUpload ~ error:",
+					error,
+				);
+			}}
+		/>
 	);
 };
 
