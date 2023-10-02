@@ -15,7 +15,7 @@
 		}
 	},
 	"dependencies": {
-		"@clerk/nextjs": "^4.23.3",
+		"@clerk/nextjs": "4.23.2",
 		"@commitlint/cli": "^17.7.1",
 		"@commitlint/config-conventional": "^17.7.0",
 		"@emoji-mart/data": "^1.1.2",
