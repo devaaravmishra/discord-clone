@@ -2,6 +2,7 @@
 
 import { useSocket } from "@/components/providers/socket-provider";
 import { Badge } from "@/components/ui/badge";
+import { LucideSignalHigh, LucideSignalMedium } from "lucide-react";
 
 const SocketIndicator = () => {
 	const { isConnected } = useSocket();
@@ -9,14 +10,18 @@ const SocketIndicator = () => {
 	if (!isConnected) {
 		return (
 			<Badge variant="outline" className="bg-yellow-600 text-white border-none">
-				Fallback: Polling every 1 second
+				<LucideSignalMedium className="w-4 h-4 mr-1" />
+				Connecting
 			</Badge>
 		);
 	}
 
 	return (
-		<Badge variant="outline" className="bg-emerald-600 text-white border-none">
-			Live: Real-time updates
+		<Badge
+			variant="outline"
+			className="bg-emerald-600 text-white flex border-none"
+		>
+			<LucideSignalHigh className="w-4 h-4 mr-1" /> Connected
 		</Badge>
 	);
 };
