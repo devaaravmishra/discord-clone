@@ -11,7 +11,6 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useModal } from "@/hooks/use-modal-store";
-import { cn } from "@/lib/utils";
 import {
 	ChevronDown,
 	LogOut,
@@ -41,12 +40,7 @@ const ServerHeader = ({ role, server }: ServerHeaderProps) => {
         border-b-2 hover:bg-zinc-700/10 dark:hover:bg-zinc-700/50 transition"
 				>
 					{server.name}
-					<ChevronDown
-						className={cn(
-							window.innerWidth >= 768 ? "ml-auto" : "ml-2",
-							"h-5 w-5 text-neutral-400 dark:text-neutral-500 transition",
-						)}
-					/>
+					<ChevronDown className="h-5 w-5 text-neutral-400 dark:text-neutral-500 ml-2 sm:ml-auto transition" />
 				</button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent className="w-56 text-xs font-medium text-black dark:text-neutral-400 space-y-[2px]">
