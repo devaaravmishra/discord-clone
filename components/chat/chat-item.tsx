@@ -111,7 +111,7 @@ const ChatItem = ({
 		form.reset({
 			content: content,
 		});
-	}, [content, form]);
+	}, [content]);
 
 	useEffect(() => {
 		const handleKeyDown = (e: KeyboardEvent) => {
@@ -160,7 +160,13 @@ const ChatItem = ({
 							rel="noopener noreferrer"
 							className="relative aspect-square rounded-md overflow-hidden border flex items-center bg-secondary h-48 w-48"
 						>
-							<Image src={fileUrl} fill alt="Image" className="object-cover" />
+							<Image
+								src={fileUrl}
+								alt="Image"
+								className="object-cover object-center"
+								width={200}
+								height={200}
+							/>
 						</a>
 					)}
 					{isPdf && (
