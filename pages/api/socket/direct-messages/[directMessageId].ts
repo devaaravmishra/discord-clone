@@ -143,7 +143,7 @@ export default async function handler(
 		}
 
 		// Emit the message to all clients in the channel
-		const updateKey = `chat:${conversation?.id}:messages:update`;
+		const updateKey = `chat:${conversationId}:messages:update`;
 
 		res?.socket?.server?.io.emit(updateKey, directMessage);
 
