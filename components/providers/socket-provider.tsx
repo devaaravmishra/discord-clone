@@ -42,7 +42,6 @@ export const SocketProvider = ({
 
 	useEffect(() => {
 		const socketInstance = io(SOCKET_URL, {
-			// path: "/api/socket/io",
 			addTrailingSlash: true,
 			transports: ["websocket", "polling"],
 			upgrade: true,

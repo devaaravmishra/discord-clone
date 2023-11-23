@@ -18,7 +18,7 @@ export const initialProfile = async () => {
 		return profile;
 	}
 
-	const fullName = `${user?.firstName} ${user?.lastName ?? ""}`;
+	const fullName = `${user?.firstName} ${user?.lastName ?? ""}`.trim();
 
 	const newProfile = await db.profile.create({
 		data: {
