@@ -22,6 +22,9 @@ model Profile {
   members  Member[]
   channels Channel[]
 
+  callsInitiated Call[] @relation("Caller")
+  callsReceived  Call[] @relation("Callee")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -131,6 +134,7 @@ model Conversation {
   memberTwoId String
   memberTwo   Member @relation("MemberTwo", fields: [memberTwoId], references: [id], onDelete: Cascade)
 
+  calls          Call[]
   directMessages DirectMessage[]
 
   createdAt DateTime @default(now())
@@ -159,4 +163,51 @@ model DirectMessage {
 
   @@index([conversationId])
   @@index([memberId])
+}
+
+model Call {
+  id String @id @unique @default(uuid())
+
+  conversationId String?
+  conversation   Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  callerId String?
+  caller   Profile? @relation("Caller", fields: [callerId], references: [id], onDelete: Cascade)
+
+  calleeId String?
+  callee   Profile? @relation("Callee", fields: [calleeId], references: [id], onDelete: Cascade)
+
+  isAccepted Boolean @default(false)
+  isRejected Boolean @default(false)
+  isCanceled Boolean @default(false)
+  isMissed   Boolean @default(false)
+
+  isEnded Boolean   @default(false)
+  endedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  callLogId String?  @unique
+  callLog   CallLog?
+
+  @@index([conversationId])
+  @@index([callerId])
+  @@index([calleeId])
+  @@index([callLogId])
+}
+
+model CallLog {
+  id String @id @default(uuid())
+
+  callType String
+  callTime DateTime
+
+  callId String @unique
+  call   Call   @relation(fields: [callId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([callId])
 }
