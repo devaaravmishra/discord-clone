@@ -1,5 +1,6 @@
 import { currentProfilePages } from "@/lib/current-profile-pages";
 import { db } from "@/lib/db";
+import { publisher } from "@/lib/redis";
 import { NextApiResponseServerIo } from "@/types/server";
 import { NextApiRequest } from "next";
 
@@ -84,8 +85,15 @@ export default async function handler(
 
 		// Emit the message to the server
 		const channelKey = `chat:${channelId}:messages`;
+		const CHANNEL_MESSAGE_NEW_KEY = "CHANNEL_MESSAGE_NEW";
 
-		res?.socket?.server?.io?.emit(channelKey, message);
+		const payload = {
+			channelId,
+			message,
+		};
+
+		publisher.publish(CHANNEL_MESSAGE_NEW_KEY, JSON.stringify(payload));
+		// res?.socket?.server?.io?.emit(channelKey, message);
 
 		return res.status(200).json(message);
 	} catch (error) {

@@ -1,5 +1,6 @@
 import { currentProfilePages } from "@/lib/current-profile-pages";
 import { db } from "@/lib/db";
+import { publisher } from "@/lib/redis";
 import { NextApiResponseServerIo } from "@/types/server";
 import { NextApiRequest } from "next";
 
@@ -90,8 +91,15 @@ export default async function handler(
 
 		// Emit the message to the conversation
 		const messageKey = `chat:${conversationId}:messages`;
+		const CONVERSATION_MESSAGE_NEW_KEY = "CONVERSATION_MESSAGE_NEW";
 
-		res?.socket?.server?.io?.emit(messageKey, message);
+		const payload = {
+			message,
+			conversationId,
+		};
+
+		publisher.publish(CONVERSATION_MESSAGE_NEW_KEY, JSON.stringify(payload));
+		// res?.socket?.server?.io?.emit(messageKey, message);
 
 		return res.status(200).json(message);
 	} catch (error) {

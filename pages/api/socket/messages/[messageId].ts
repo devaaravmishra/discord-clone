@@ -1,5 +1,6 @@
 import { currentProfilePages } from "@/lib/current-profile-pages";
 import { db } from "@/lib/db";
+import { publisher } from "@/lib/redis";
 import { NextApiResponseServerIo } from "@/types/server";
 import { MemberRole } from "@prisma/client";
 import { NextApiRequest } from "next";
@@ -138,8 +139,15 @@ export default async function handler(
 
 		// Emit the message to all clients in the channel
 		const updateKey = `chat:${channelId}:messages:update`;
+		const CHANNEL_MESSAGE_UPDATE_KEY = "CHANNEL_MESSAGE_UPDATE";
 
-		res?.socket?.server?.io?.emit(updateKey, message);
+		const payload = {
+			channelId,
+			message,
+		};
+
+		publisher.publish(CHANNEL_MESSAGE_UPDATE_KEY, JSON.stringify(payload));
+		// res?.socket?.server?.io?.emit(updateKey, message);
 
 		return res.status(200).json(message);
 	} catch (error) {

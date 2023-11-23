@@ -1,5 +1,6 @@
 import { currentProfilePages } from "@/lib/current-profile-pages";
 import { db } from "@/lib/db";
+import { publisher } from "@/lib/redis";
 import { NextApiResponseServerIo } from "@/types/server";
 import { MemberRole } from "@prisma/client";
 import { NextApiRequest } from "next";
@@ -144,8 +145,15 @@ export default async function handler(
 
 		// Emit the message to all clients in the channel
 		const updateKey = `chat:${conversationId}:messages:update`;
+		const CONVERSATION_MESSAGE_UPDATE_KEY = "CONVERSATION_MESSAGE_UPDATE";
 
-		res?.socket?.server?.io.emit(updateKey, directMessage);
+		const payload = {
+			conversationId,
+			directMessage,
+		};
+
+		publisher.publish(CONVERSATION_MESSAGE_UPDATE_KEY, JSON.stringify(payload));
+		// res?.socket?.server?.io.emit(updateKey, directMessage);
 
 		return res.status(200).json(directMessage);
 	} catch (error) {
