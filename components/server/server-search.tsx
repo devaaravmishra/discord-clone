@@ -64,7 +64,7 @@ const ServerSearch = ({ data }: ServerSearchProps) => {
 		return () => {
 			window.removeEventListener("keydown", handleKeyDown);
 		};
-	}, [isOpen, setIsOpen]);
+	}, [isOpen]);
 
 	return (
 		<>
