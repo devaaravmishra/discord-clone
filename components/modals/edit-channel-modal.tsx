@@ -96,7 +96,7 @@ const EditChannelModal = () => {
 			form.setValue("name", channel?.name);
 			form.setValue("type", channel?.type);
 		}
-	}, [channel, form]);
+	}, [channel]);
 
 	return (
 		<Dialog open={isModalOpen} onOpenChange={handleClose}>

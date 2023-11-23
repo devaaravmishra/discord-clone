@@ -7,7 +7,13 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem } from "../ui/form";
+import {
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormMessage,
+} from "../ui/form";
 
 import FileUpload from "@/components/file-upload";
 import {
@@ -55,9 +61,9 @@ const MessageFileModal = () => {
 				url: apiUrl || "",
 				query,
 			});
-			await axios.post("/api/servers", {
+			await axios.post(url, {
 				...values,
-				fileUrl: values.fileUrl,
+				content: values.fileUrl,
 			});
 
 			form.reset();
@@ -95,6 +101,7 @@ const MessageFileModal = () => {
 													onChange={field.onChange}
 												/>
 											</FormControl>
+											<FormMessage />
 										</FormItem>
 									)}
 								></FormField>
@@ -107,7 +114,7 @@ const MessageFileModal = () => {
 								className="w-full"
 								variant="primary"
 							>
-								Create
+								{isLoading ? "Uploading..." : "Upload"}
 							</Button>
 						</DialogFooter>
 					</form>
