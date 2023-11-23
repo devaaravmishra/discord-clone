@@ -1,3 +1,5 @@
+import { CallData } from "@/types/call";
+import { MemberWithProfile } from "@/types/server";
 import { Channel, ChannelType, Server } from "@prisma/client";
 import { create } from "zustand";
 
@@ -12,7 +14,9 @@ export type ModalType =
 	| "deleteChannel"
 	| "editChannel"
 	| "messageFile"
-	| "deleteMessage";
+	| "deleteMessage"
+	| "incomingCall"
+	| "outgoingCall";
 
 interface ModalStore {
 	type: ModalType | null;
@@ -28,6 +32,8 @@ interface ModalData {
 	channelType?: ChannelType;
 	apiUrl?: string;
 	query?: Record<string, any>;
+	callData?: CallData;
+	callee?: MemberWithProfile;
 }
 
 export const useModal = create<ModalStore>((set) => ({

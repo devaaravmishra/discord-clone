@@ -3,6 +3,7 @@ import { Hash } from "lucide-react";
 import MobileToggle from "@/components/mobile-toggle";
 import SocketIndicator from "@/components/socket-indicator";
 import UserAvatar from "@/components/user-avatar";
+import { MemberWithProfile } from "@/types/server";
 import { ChatVideoButton } from "./chat-video-button";
 
 interface ChatHeaderProps {
@@ -10,9 +11,20 @@ interface ChatHeaderProps {
 	name: string;
 	type: "conversation" | "channel";
 	imageUrl?: string;
+	conversationId?: string;
+	callerId?: string;
+	callee?: MemberWithProfile;
 }
 
-const ChatHeader = ({ name, serverId, type, imageUrl }: ChatHeaderProps) => {
+const ChatHeader = ({
+	name,
+	serverId,
+	type,
+	imageUrl,
+	callee,
+	callerId,
+	conversationId,
+}: ChatHeaderProps) => {
 	return (
 		<div
 			className="text-md font-semibold px-3 flex items-center h-12 border-neutral-200
@@ -27,7 +39,13 @@ const ChatHeader = ({ name, serverId, type, imageUrl }: ChatHeaderProps) => {
 			)}
 			<p className="font-semibold text-md text-black dark:text-white">{name}</p>
 			<div className="flex items-center ml-auto">
-				{type === "conversation" && <ChatVideoButton />}
+				{type === "conversation" && (
+					<ChatVideoButton
+						callee={callee as MemberWithProfile}
+						callerId={callerId || ""}
+						conversationId={conversationId || ""}
+					/>
+				)}
 				<SocketIndicator />
 			</div>
 		</div>

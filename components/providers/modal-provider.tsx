@@ -9,16 +9,22 @@ import DeleteMessageModal from "@/components/modals/delete-message-modal";
 import DeleteServerModal from "@/components/modals/delete-server-modal";
 import EditChannelModal from "@/components/modals/edit-channel-modal";
 import EditServerModal from "@/components/modals/edit-server-modal";
+import IncomingCallModal from "@/components/modals/incoming-call-modal";
 import InviteModal from "@/components/modals/invite-modal";
 import LeaveServerModal from "@/components/modals/leave-server-modal";
 import MembersModal from "@/components/modals/members-modal";
 import MessageFileModal from "@/components/modals/message-file-modal";
+import OutgoingCallModal from "@/components/modals/outgoing-call-modal";
 
 export const ModalProvider = () => {
 	const [isMounted, setIsMounted] = useState(false);
 
 	useEffect(() => {
 		setIsMounted(true);
+
+		return () => {
+			setIsMounted(false);
+		};
 	}, []);
 
 	if (!isMounted) {
@@ -38,6 +44,8 @@ export const ModalProvider = () => {
 			<EditChannelModal />
 			<MessageFileModal />
 			<DeleteMessageModal />
+			<IncomingCallModal />
+			<OutgoingCallModal />
 		</>
 	);
 };

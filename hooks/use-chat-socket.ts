@@ -49,6 +49,10 @@ export const useChatSocket = ({
 		});
 
 		socket.on(addKey, (message: MessageWithMemberWithProfile) => {
+			console.log(
+				"🚀 ~ file: use-chat-socket.ts:52 ~ socket.on ~ message:",
+				message,
+			);
 			queryClient.setQueryData([queryKey], (oldData: any) => {
 				if (!oldData || !oldData.pages || oldData.pages.length === 0) {
 					return {
@@ -80,5 +84,5 @@ export const useChatSocket = ({
 			socket.off(updateKey, () => {});
 			socket.off(addKey, () => {});
 		};
-	}, [addKey, queryClient, queryKey, socket, updateKey]);
+	}, [addKey, queryKey, updateKey]);
 };

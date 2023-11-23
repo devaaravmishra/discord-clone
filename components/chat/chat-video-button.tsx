@@ -1,11 +1,27 @@
 "use client";
 
 import { ActionTooltip } from "@/components/action-tooltip";
+import { useModal } from "@/hooks/use-modal-store";
+import axios from "@/lib/axios";
+import { useCallStore } from "@/store/call-store";
+import { MemberWithProfile } from "@/types/server";
 import { Video, VideoOff } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import qs from "query-string";
+import { toast } from "sonner";
 
-export const ChatVideoButton = () => {
+interface ChatVideoButtonProps {
+	callerId: string;
+	callee: MemberWithProfile;
+	conversationId: string;
+}
+
+export const ChatVideoButton = ({
+	callee,
+	callerId,
+	conversationId,
+}: ChatVideoButtonProps) => {
+	const { onOpen, onClose } = useModal();
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
 	const router = useRouter();
@@ -15,7 +31,42 @@ export const ChatVideoButton = () => {
 	const Icon = isVideo ? VideoOff : Video;
 	const tooltipLabel = isVideo ? "Turn off video" : "Turn on video";
 
-	const onClick = () => {
+	const { setOngoingCall } = useCallStore();
+
+	// hit call api to send notification to other user
+	const handleOnCall = async () => {
+		onOpen("outgoingCall", {
+			callee,
+		});
+
+		const url = qs.stringifyUrl({
+			url: "/api/socket/call",
+			query: {
+				conversationId,
+				callerId,
+			},
+		});
+
+		await axios
+			.post(url)
+			.then((res) => {
+				if (res?.status == 201) {
+					setOngoingCall(res?.data);
+
+					if (res?.data?.isMissed) {
+						onClose();
+						toast.error("Call missed");
+					}
+				}
+			})
+			.catch((err) => {
+				toast.error(err?.response?.data?.message || "Something went wrong");
+
+				onClose();
+			});
+	};
+
+	const onCallAcceptedOrRejected = () => {
 		const url = qs.stringifyUrl(
 			{
 				url: pathname || "",
@@ -31,7 +82,12 @@ export const ChatVideoButton = () => {
 
 	return (
 		<ActionTooltip side="bottom" label={tooltipLabel}>
-			<button onClick={onClick} className="hover:opacity-75 transition mr-4">
+			<button
+				onClick={() => {
+					handleOnCall();
+				}}
+				className="hover:opacity-75 transition mr-4"
+			>
 				<Icon className="h-6 w-6 text-zinc-500 dark:text-zinc-400" />
 			</button>
 		</ActionTooltip>

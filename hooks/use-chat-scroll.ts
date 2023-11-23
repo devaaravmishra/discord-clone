@@ -38,7 +38,7 @@ export const useChatScroll = ({
 				topDiv.removeEventListener("scroll", handleScroll);
 			}
 		};
-	}, [chatRef, hasInitialized, loadMore, shouldLoadMore]);
+	}, [chatRef, hasInitialized, shouldLoadMore]);
 
 	// scroll to bottom when new message is added
 	useEffect(() => {

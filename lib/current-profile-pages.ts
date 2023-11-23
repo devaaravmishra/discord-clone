@@ -13,6 +13,11 @@ export const currentProfilePages = async (req: NextApiRequest) => {
 		where: {
 			userId,
 		},
+
+		include: {
+			callsInitiated: true,
+			callsReceived: true,
+		},
 	});
 
 	return profile;

@@ -10,11 +10,11 @@ interface MediaRoomProps {
 	chatId: string;
 	audio: boolean;
 	video: boolean;
+	apiUrl: string;
 }
 
-const MediaRoom = ({ chatId, audio, video }: MediaRoomProps) => {
+const MediaRoom = ({ chatId, audio, video, apiUrl }: MediaRoomProps) => {
 	const { user } = useUser();
-	console.log("[MediaRoom] User", user);
 	const [token, setToken] = useState("");
 
 	useEffect(() => {
@@ -33,7 +33,7 @@ const MediaRoom = ({ chatId, audio, video }: MediaRoomProps) => {
 				console.error("[MediaRoom]", error);
 			}
 		})();
-	}, [chatId, user?.firstName, user?.fullName, user?.lastName]);
+	}, [chatId, user]);
 
 	if (token === "") {
 		return (

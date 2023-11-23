@@ -72,7 +72,7 @@ const ChatTypingWrapper = (props: ChatTypingWrapperProps) => {
 		return () => {
 			socket?.off(key, () => {});
 		};
-	}, [props, isConnected, socket, setTypingCache, isConversation, isChannel]);
+	}, [props, isConnected, isConversation, isChannel]);
 
 	const memoizedMembers = useMemo(() => {
 		const typingMembers = Object.keys(typingCache).filter(
