@@ -31,7 +31,7 @@ export default async function handler(
 		}
 
 		if (req.method === "POST") {
-			const { conversationId, callerId } = req.query;
+			const { conversationId, callerId, serverId } = req.query;
 
 			if (!conversationId || !callerId) {
 				return res.status(400).json({ message: "Bad request" });
@@ -62,6 +62,8 @@ export default async function handler(
 							},
 						},
 					},
+					memberOneId: true,
+					memberTwoId: true,
 				},
 			});
 
@@ -90,18 +92,16 @@ export default async function handler(
 				const payload = {
 					callerId,
 					conversationId,
+					serverId,
 				};
 
 				publisher.publish(CALL_IN_PROGRESS_KEY, JSON.stringify(payload));
-
-				// res?.socket?.server?.io?.emit(`ongoing-call-${callerId}`, {
-				// 	conversationId: conversationId,
-				// });
 			}
 
 			const call = await db.call.create({
 				data: {
 					conversationId: conversationId as string,
+					serverId: serverId as string,
 					callerId: callerId as string,
 					calleeId:
 						memberOneProfileId === profile?.id
@@ -115,7 +115,6 @@ export default async function handler(
 				return res.status(500).json({ message: "Internal server error" });
 			}
 
-			const outGoingCallKey = `outgoing-call-${call?.calleeId}`;
 			const OUTGOING_CALL_KEY = "OUTGOING_CALL";
 
 			const caller =
@@ -126,10 +125,20 @@ export default async function handler(
 			const callId = call.id;
 
 			const payload = {
+				call,
 				callId,
 				caller,
 				conversationId,
 				calleeId: call.calleeId,
+				serverId,
+				callerMemberId:
+					memberOneProfileId === profile?.id
+						? conversation?.memberOneId
+						: conversation.memberTwoId,
+				calleeMemberId:
+					memberOneProfileId === profile?.id
+						? conversation?.memberTwoId
+						: conversation.memberOneId,
 			};
 
 			publisher.publish(OUTGOING_CALL_KEY, JSON.stringify(payload));
@@ -167,6 +176,7 @@ export default async function handler(
 					calleeId: newCall?.calleeId,
 					conversationId: newCall?.conversationId,
 					callId: call?.id,
+					serverId,
 				};
 				publisher.publish(MISSED_CALL_KEY, JSON.stringify(payload));
 
@@ -196,6 +206,7 @@ export default async function handler(
 					callerId: newCall?.callerId,
 					conversationId: newCall?.conversationId,
 					callId: call?.id,
+					serverId,
 				};
 
 				publisher.publish(MISSED_DIALLED_CALL_KEY, JSON.stringify(data));
@@ -211,7 +222,17 @@ export default async function handler(
 		}
 
 		if (req.method === "PATCH") {
-			const { callId, isAccepted, isRejected, isEnded, isCanceled } = req.body;
+			const {
+				callId,
+				isAccepted,
+				isRejected,
+				isEnded,
+				isCanceled,
+				serverId,
+				callerMemberId,
+				calleeMemberId,
+				endedBy,
+			} = req.body;
 
 			if (!callId && !isAccepted && !isRejected && !isEnded && !isCanceled) {
 				return res.status(400).json({ message: "Bad request" });
@@ -243,19 +264,18 @@ export default async function handler(
 				console.log("🚀 ~ file: index.ts:210 ~ call-accepted:", call);
 
 				// Emit the accepted call event to the caller with conversationId
-				const callKey = `accepted-call-${callerId}`;
 				const ACCEPTED_CALL_KEY = "ACCEPTED_CALL";
 
 				const payload = {
 					conversationId: call.conversationId,
 					callId: call.id,
 					callerId,
+					serverId,
+					callerMemberId,
+					calleeMemberId,
 				};
+
 				publisher.publish(ACCEPTED_CALL_KEY, JSON.stringify(payload));
-				// res?.socket?.server?.io?.emit(callKey, {
-				// 	conversationId: call.conversationId,
-				// 	callId: call.id,
-				// });
 
 				call = await db.call.update({
 					where: {
@@ -271,20 +291,15 @@ export default async function handler(
 				console.log("🚀 ~ file: index.ts:231 ~ call-rejected:", call);
 
 				// Emit the rejected call event to the caller with conversationId
-				const callKey = `rejected-call-${callerId}`;
 				const REJECTED_CALL_KEY = "REJECTED_CALL";
 
 				const payload = {
 					conversationId: call.conversationId,
 					callId: call.id,
 					callerId,
+					serverId,
 				};
 				publisher.publish(REJECTED_CALL_KEY, JSON.stringify(payload));
-
-				// res?.socket?.server?.io?.emit(callKey, {
-				// 	conversationId: call.conversationId,
-				// 	callId: call.id,
-				// });
 
 				// Update call status to rejected
 				call = await db.call.update({
@@ -301,20 +316,20 @@ export default async function handler(
 				console.log("🚀 ~ file: index.ts:252 ~ call-ended:", call);
 
 				// Emit the ended call event to the caller with conversationId
-				const callKey = `ended-call-${callerId}`;
 				const CALL_ENDED_KEY = "CALL_ENDED";
+
+				const endedByCaller = endedBy === callerId;
 
 				const payload = {
 					conversationId: call.conversationId,
 					callId: call.id,
 					callerId,
+					calleeId,
+					serverId,
+					endedByCaller,
 				};
-				publisher.publish(CALL_ENDED_KEY, JSON.stringify(payload));
 
-				// res?.socket?.server?.io?.emit(callKey, {
-				// 	conversationId: call.conversationId,
-				// 	callId: call.id,
-				// });
+				publisher.publish(CALL_ENDED_KEY, JSON.stringify(payload));
 
 				// Update call status to ended
 				call = await db.call.update({
@@ -332,20 +347,15 @@ export default async function handler(
 				console.log("🚀 ~ file: index.ts:273 ~ call-canceled:", call);
 
 				// Emit the canceled call event to the caller with conversationId
-				const callKey = `missed-call-${calleeId}`;
 				const MISSED_CALL_KEY = "MISSED_CALL";
 
 				const payload = {
 					calleeId,
 					conversationId: call.conversationId,
 					callId: call.id,
+					serverId,
 				};
 				publisher.publish(MISSED_CALL_KEY, JSON.stringify(payload));
-
-				// res?.socket?.server?.io?.emit(callKey, {
-				// 	conversationId: call.conversationId,
-				// 	callId: call.id,
-				// });
 
 				// Update call status to canceled
 				call = await db.call.update({

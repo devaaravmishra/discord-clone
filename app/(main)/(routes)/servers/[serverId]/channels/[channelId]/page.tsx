@@ -94,6 +94,8 @@ const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
 					audio={true}
 					video={false}
 					apiUrl="/api/socket/call"
+					profileId={profile.id}
+					type="channel"
 				/>
 			)}
 			{channel.type === ChannelType.VIDEO && (
@@ -102,6 +104,8 @@ const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
 					audio={true}
 					video={true}
 					apiUrl="/api/socket/call"
+					profileId={profile.id}
+					type="channel"
 				/>
 			)}
 		</div>

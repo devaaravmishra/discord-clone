@@ -14,6 +14,7 @@ interface ChatVideoButtonProps {
 	callerId: string;
 	callee: MemberWithProfile;
 	conversationId: string;
+	serverId: string;
 }
 
 export const ChatVideoButton = ({
@@ -47,7 +48,7 @@ export const ChatVideoButton = ({
 			},
 		});
 
-		await axios
+		axios
 			.post(url)
 			.then((res) => {
 				if (res?.status == 201) {
@@ -66,12 +67,12 @@ export const ChatVideoButton = ({
 			});
 	};
 
-	const onCallAcceptedOrRejected = () => {
+	const onCallEnd = () => {
 		const url = qs.stringifyUrl(
 			{
 				url: pathname || "",
 				query: {
-					video: isVideo ? undefined : true,
+					video: undefined,
 				},
 			},
 			{ skipNull: true },
@@ -84,7 +85,13 @@ export const ChatVideoButton = ({
 		<ActionTooltip side="bottom" label={tooltipLabel}>
 			<button
 				onClick={() => {
-					handleOnCall();
+					if (!isVideo) {
+						handleOnCall();
+					}
+
+					if (isVideo) {
+						onCallEnd();
+					}
 				}}
 				className="hover:opacity-75 transition mr-4"
 			>

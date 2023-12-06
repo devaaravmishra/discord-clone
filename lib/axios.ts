@@ -1,5 +1,4 @@
 import Axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
-import { toast } from "sonner";
 
 const axios = Axios.create({
 	baseURL: "",
@@ -28,10 +27,6 @@ const responseErrorHandler = <T>(
 	error: AxiosError<T>,
 ): Promise<AxiosError<T>> => {
 	console.log("🚀 ~ res.interceptor ~", error.response?.data);
-
-	if (error.isAxiosError && !error.response) {
-		toast("No Internet Connection!");
-	}
 
 	return Promise.reject(error);
 };

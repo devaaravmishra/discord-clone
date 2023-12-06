@@ -104,6 +104,8 @@ const MemberIdPage = async ({ params, searchParams }: MemberIdPageProps) => {
 					video={true}
 					chatId={conversation?.id}
 					apiUrl="/api/direct-messages"
+					type="conversation"
+					profileId={profile?.id}
 				/>
 			)}
 		</div>
