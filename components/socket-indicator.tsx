@@ -21,7 +21,8 @@ const SocketIndicator = () => {
 			variant="outline"
 			className="bg-emerald-600 text-white flex border-none"
 		>
-			<LucideSignalHigh className="w-4 h-4 mr-1" /> Connected
+			<LucideSignalHigh className="w-4 h-4 mr-1" />
+			<span className="text-xs uppercase font-semibold">Connected</span>
 		</Badge>
 	);
 };

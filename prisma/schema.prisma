@@ -18,6 +18,8 @@ model Profile {
   imageUrl String @db.Text
   email    String @unique @db.Text
 
+  isOnline Boolean @default(false)
+
   servers  Server[]
   members  Member[]
   channels Channel[]
@@ -171,6 +173,8 @@ model Call {
   conversationId String?
   conversation   Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
 
+  serverId String?
+
   callerId String?
   caller   Profile? @relation("Caller", fields: [callerId], references: [id], onDelete: Cascade)
 
@@ -192,6 +196,7 @@ model Call {
   callLog   CallLog?
 
   @@index([conversationId])
+  @@index([serverId])
   @@index([callerId])
   @@index([calleeId])
   @@index([callLogId])
@@ -201,7 +206,7 @@ model CallLog {
   id String @id @default(uuid())
 
   callType String
-  callTime DateTime
+  duration DateTime
 
   callId String @unique
   call   Call   @relation(fields: [callId], references: [id], onDelete: Cascade)

@@ -1,7 +1,11 @@
 "use client";
 
 import { useModal } from "@/hooks/use-modal-store";
+import axios from "@/lib/axios";
+import { useCallStore } from "@/store/call-store";
 import { CallData, CallDataWithoutMember } from "@/types/call";
+import { MemberWithProfile } from "@/types/server";
+import { Call } from "@prisma/client";
 import { usePathname, useRouter } from "next/navigation";
 import qs from "query-string";
 import { createContext, useContext, useEffect, useState } from "react";
@@ -38,9 +42,69 @@ export const SocketProvider = ({
 	const router = useRouter();
 	const pathname = usePathname();
 
+	const { setOngoingCall, ongoingCall } = useCallStore();
+
 	const { onOpen, onClose } = useModal();
 
+	const fetchAnyIncomingCall = async () => {
+		const url = qs.stringifyUrl(
+			{ url: `/api/socket/call/ongoing-call` },
+			{ skipNull: true },
+		);
+
+		try {
+			const { data, status } = await axios.get(url);
+
+			const { call, callData } = data as { call: Call; callData: CallData };
+
+			if (status === 200) {
+				setOngoingCall(call);
+				onOpen("incomingCall", {
+					callData: {
+						caller: callData?.caller,
+						callId: callData?.callId,
+						conversationId: callData?.conversationId,
+						serverId: callData?.serverId,
+						callerMemberId: callData?.callerMemberId,
+						calleeMemberId: callData?.calleeMemberId,
+					},
+				});
+			}
+		} catch (error) {}
+	};
+
+	const handleOnlineOfflineStatus = async (isOnline: boolean) => {
+		const url = qs.stringifyUrl(
+			{ url: `/api/profile/update-status` },
+			{ skipNull: true },
+		);
+
+		try {
+			await axios.patch(url, { isOnline });
+		} catch (error) {}
+	};
+
 	useEffect(() => {
+		fetchAnyIncomingCall();
+	}, []);
+
+	useEffect(() => {
+		const handleBeforeUnload = async () => {
+			await handleOnlineOfflineStatus(false);
+		};
+
+		window.addEventListener("beforeunload", handleBeforeUnload);
+		window.addEventListener("unload", handleBeforeUnload);
+
+		return () => {
+			window.removeEventListener("beforeunload", handleBeforeUnload);
+			window.removeEventListener("unload", handleBeforeUnload);
+		};
+	}, []);
+
+	useEffect(() => {
+		handleOnlineOfflineStatus(true);
+
 		const socketInstance = io(SOCKET_URL, {
 			addTrailingSlash: true,
 			transports: ["websocket", "polling"],
@@ -52,15 +116,31 @@ export const SocketProvider = ({
 			setIsConnected(true);
 		});
 
-		socketInstance.on(`outgoing-call-${profileId}`, (data: CallData) => {
-			onOpen("incomingCall", {
-				callData: {
-					caller: data?.caller,
-					callId: data?.callId,
-					conversationId: data?.conversationId,
-				},
-			});
-		});
+		socketInstance.on(
+			`outgoing-call-${profileId}`,
+			(data: {
+				call: Call;
+				caller: MemberWithProfile;
+				callId: string;
+				conversationId: string;
+				serverId: string;
+				callerMemberId: string;
+				calleeMemberId: string;
+			}) => {
+				onOpen("incomingCall", {
+					callData: {
+						caller: data?.caller,
+						callId: data?.callId,
+						conversationId: data?.conversationId,
+						serverId: data?.serverId,
+						callerMemberId: data?.callerMemberId,
+						calleeMemberId: data?.calleeMemberId,
+					},
+				});
+
+				setOngoingCall(data?.call);
+			},
+		);
 
 		socketInstance.on(
 			`ongoing-call-${profileId}`,
@@ -86,9 +166,10 @@ export const SocketProvider = ({
 
 				onClose();
 
+				const path = `/servers/${data?.serverId}/conversations/${data?.calleeMemberId}`;
 				const url = qs.stringifyUrl(
 					{
-						url: pathname || "",
+						url: path || "",
 						query: {
 							video: true,
 						},
@@ -110,6 +191,8 @@ export const SocketProvider = ({
 
 				onClose();
 
+				setOngoingCall(null);
+
 				toast.message("Call Declined");
 			},
 		);
@@ -122,21 +205,23 @@ export const SocketProvider = ({
 					data,
 				);
 
-				onClose();
-
-				const url = qs.stringifyUrl(
-					{
-						url: pathname || "",
-						query: {
-							video: undefined,
+				if (!ongoingCall) {
+					const url = qs.stringifyUrl(
+						{
+							url: pathname || "",
+							query: {
+								video: undefined,
+							},
 						},
-					},
-					{ skipNull: true },
-				);
+						{ skipNull: true },
+					);
 
-				router.push(url);
+					router.push(url);
 
-				toast.message("Call Ended");
+					setOngoingCall(null);
+
+					toast.message("Call Ended");
+				}
 			},
 		);
 
@@ -149,6 +234,8 @@ export const SocketProvider = ({
 				);
 
 				onClose();
+
+				setOngoingCall(null);
 
 				toast.message("Missed call");
 			},
@@ -164,6 +251,8 @@ export const SocketProvider = ({
 
 				onClose();
 
+				setOngoingCall(null);
+
 				toast.message("Unanswered call");
 			},
 		);
@@ -176,6 +265,7 @@ export const SocketProvider = ({
 
 		return () => {
 			socketInstance.disconnect();
+			setSocket(null);
 		};
 	}, []);
 

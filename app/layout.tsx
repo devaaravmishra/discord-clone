@@ -4,7 +4,7 @@ import { SocketProvider } from "@/components/providers/socket-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { currentProfile } from "@/lib/current-profile";
 import { cn } from "@/lib/utils";
-import { ClerkProvider } from "@clerk/nextjs";
+import { ClerkLoaded, ClerkLoading, ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { Open_Sans } from "next/font/google";
 import { Toaster } from "sonner";
@@ -37,7 +37,17 @@ export default async function RootLayout({
 						<SocketProvider profileId={profile?.id || ""}>
 							<Toaster />
 							<ModalProvider />
-							<QueryProvider>{children}</QueryProvider>
+							<ClerkLoading>
+								<div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-opacity-50 z-50">
+									<div className="relative flex items-center justify-center">
+										<div className="w-8 h-8 border-t-2 border-white border-solid rounded-full animate-spin"></div>
+										<div className="w-8 h-8 border-t-2 border-white border-solid rounded-full animate-spin absolute"></div>
+									</div>
+								</div>
+							</ClerkLoading>
+							<ClerkLoaded>
+								<QueryProvider>{children}</QueryProvider>
+							</ClerkLoaded>
 						</SocketProvider>
 					</ThemeProvider>
 				</body>
