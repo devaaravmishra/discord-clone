@@ -1,13 +1,10 @@
-"use client";
-
 import { Hash } from "lucide-react";
 
 import MobileToggle from "@/components/mobile-toggle";
 import SocketIndicator from "@/components/socket-indicator";
-import UserAvatar from "@/components/user-avatar";
-import { useOnlineStatus } from "@/hooks/use-online-status";
 import { MemberWithProfile } from "@/types/server";
 import { Profile } from "@prisma/client";
+import UserAvatarWraper from "../user-avatar-wrapper";
 import { ChatVideoButton } from "./chat-video-button";
 
 interface ChatHeaderProps {
@@ -29,8 +26,6 @@ const ChatHeader = ({
 	callerId,
 	conversationId,
 }: ChatHeaderProps) => {
-	const { isUserOnline } = useOnlineStatus(callee?.profile || ({} as Profile));
-
 	return (
 		<div
 			className="text-md font-semibold px-3 flex items-center h-12 border-neutral-200
@@ -41,7 +36,10 @@ const ChatHeader = ({
 				<Hash className="w-5 h-5 text-zinc-500 dark:text-zinc-400 mr-2" />
 			)}
 			{type === "conversation" && (
-				<UserAvatar src={imageUrl} isOnline={isUserOnline} />
+				<UserAvatarWraper
+					imageUrl={imageUrl || ""}
+					profile={callee?.profile || ({} as Profile)}
+				/>
 			)}
 			<p className="font-semibold text-md text-black dark:text-white ml-2">
 				{name}

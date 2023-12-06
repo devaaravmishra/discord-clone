@@ -1,7 +1,7 @@
 "use client";
 
 import { UserButton } from "@clerk/nextjs";
-import { useSocket } from "../providers/socket-provider";
+import { useSocket } from "./providers/socket-provider";
 
 const UserProfile = () => {
 	const { isConnected } = useSocket();

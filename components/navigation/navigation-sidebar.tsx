@@ -7,7 +7,7 @@ import { NavigationItem } from "@/components/navigation/navigation-item";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { currentProfile } from "@/lib/current-profile";
-import UserProfile from "../user/user-profile";
+import UserProfile from "../user-profile";
 
 export const NavigationSidebar = async () => {
 	const profile = await currentProfile();
