@@ -23,6 +23,12 @@
 		},
 		"forceConsistentCasingInFileNames": true
 	},
-	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+	"include": [
+		"next-env.d.ts",
+		"**/*.ts",
+		"**/*.tsx",
+		".next/types/**/*.ts",
+		"pages/api/socket/io.ts.template"
+	],
 	"exclude": ["node_modules"]
 }
