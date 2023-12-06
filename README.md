@@ -87,7 +87,7 @@ Here's a roadmap outlining the planned features and improvements for my Discord 
 
   - Allow users to edit their messages in real-time.
 
-- [ ] **Real-time Typing Indicators**
+- [x] **Real-time Typing Indicators**
 
   - Display the typing status of users in real-time.
 
@@ -95,7 +95,7 @@ Here's a roadmap outlining the planned features and improvements for my Discord 
 
   - Allow users to react to messages with emojis. Also, display the number of reactions.
 
-- [ ] **Stay in the Loop**
+- [x] **Stay in the Loop**
 
   - Display the online status of users and their last active time.
 
