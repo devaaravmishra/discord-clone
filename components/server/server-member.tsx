@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 
 import UserAvatar from "@/components/user-avatar";
 import { useOnlineStatus } from "@/hooks/use-online-status";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/cn";
 import { Member, MemberRole, Profile, Server } from "@prisma/client";
 
 const roleIcons = {

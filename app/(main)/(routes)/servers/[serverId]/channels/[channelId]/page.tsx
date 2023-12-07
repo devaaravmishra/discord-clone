@@ -6,7 +6,7 @@ import ChatInput from "@/components/chat/chat-input";
 import ChatMessages from "@/components/chat/chat-messages";
 import ChatTypingWrapper from "@/components/chat/chat-typing-wrapper";
 import MediaRoom from "@/components/media-room";
-import { currentProfile } from "@/lib/current-profile";
+import { currentProfile } from "@/helpers/current-profile";
 import { db } from "@/lib/db";
 import { ChannelType } from "@prisma/client";
 

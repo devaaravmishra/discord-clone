@@ -1,4 +1,4 @@
-import { currentProfilePages } from "@/lib/current-profile-pages";
+import { currentProfilePages } from "@/helpers/current-profile-pages";
 import { db } from "@/lib/db";
 import { publisher } from "@/lib/redis";
 import { NextApiResponseServerIo } from "@/types/server";

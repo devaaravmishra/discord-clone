@@ -11,7 +11,7 @@ import {
 	DialogTitle,
 } from "@/components/ui/dialog";
 import { useModal } from "@/hooks/use-modal-store";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/cn";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { Input } from "../ui/input";

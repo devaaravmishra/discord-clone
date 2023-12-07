@@ -1,5 +1,5 @@
-import { fetchIncomingCall } from "@/lib/calls";
-import { currentProfilePages } from "@/lib/current-profile-pages";
+import { fetchIncomingCall } from "@/helpers/calls";
+import { currentProfilePages } from "@/helpers/current-profile-pages";
 import { db } from "@/lib/db";
 import { NextApiRequest, NextApiResponse } from "next";
 

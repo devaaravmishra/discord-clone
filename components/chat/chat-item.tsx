@@ -16,7 +16,7 @@ import { Form, FormControl, FormField } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import UserAvatar from "@/components/user-avatar";
 import { useModal } from "@/hooks/use-modal-store";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/cn";
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 

@@ -1,4 +1,4 @@
-import { currentProfile } from "@/lib/current-profile";
+import { currentProfile } from "@/helpers/current-profile";
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 
