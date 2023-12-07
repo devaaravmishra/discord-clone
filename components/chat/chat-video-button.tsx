@@ -21,6 +21,7 @@ export const ChatVideoButton = ({
 	callee,
 	callerId,
 	conversationId,
+	serverId,
 }: ChatVideoButtonProps) => {
 	const { onOpen, onClose } = useModal();
 	const pathname = usePathname();
@@ -45,6 +46,7 @@ export const ChatVideoButton = ({
 			query: {
 				conversationId,
 				callerId,
+				serverId,
 			},
 		});
 
