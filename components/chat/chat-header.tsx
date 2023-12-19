@@ -4,7 +4,7 @@ import MobileToggle from "@/components/mobile-toggle";
 import SocketIndicator from "@/components/socket-indicator";
 import { MemberWithProfile } from "@/types/server";
 import { Profile } from "@prisma/client";
-import UserAvatarWraper from "../user-avatar-wrapper";
+import UserAvatarWrapper from "../user-avatar-wrapper";
 import { ChatVideoButton } from "./chat-video-button";
 
 interface ChatHeaderProps {
@@ -36,10 +36,7 @@ const ChatHeader = ({
 				<Hash className="w-5 h-5 text-zinc-500 dark:text-zinc-400 mr-2" />
 			)}
 			{type === "conversation" && (
-				<UserAvatarWraper
-					imageUrl={imageUrl || ""}
-					profile={callee?.profile || ({} as Profile)}
-				/>
+				<UserAvatarWrapper profile={callee?.profile || ({} as Profile)} />
 			)}
 			<p className="font-semibold text-md text-black dark:text-white ml-2">
 				{name}

@@ -4,15 +4,14 @@ import { useOnlineStatus } from "@/hooks/use-online-status";
 import { Profile } from "@prisma/client";
 import UserAvatar from "./user-avatar";
 
-interface UserAvatarWraperProps {
-	imageUrl: string;
+interface UserAvatarWrapperProps {
 	profile: Profile;
 }
 
-const UserAvatarWraper = ({ imageUrl, profile }: UserAvatarWraperProps) => {
+const UserAvatarWrapper = ({ profile }: UserAvatarWrapperProps) => {
 	const { isUserOnline } = useOnlineStatus(profile || ({} as Profile));
 
-	return <UserAvatar src={imageUrl} isOnline={isUserOnline} />;
+	return <UserAvatar src={profile?.imageUrl} isOnline={isUserOnline} />;
 };
 
-export default UserAvatarWraper;
+export default UserAvatarWrapper;

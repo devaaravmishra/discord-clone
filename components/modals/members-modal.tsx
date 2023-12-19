@@ -21,7 +21,6 @@ import {
 	DialogTitle,
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import UserAvatar from "@/components/user-avatar";
 import { useModal } from "@/hooks/use-modal-store";
 import { ServerWithMembersWithProfiles } from "@/types/server";
 
@@ -39,6 +38,7 @@ import {
 import { MemberRole } from "@prisma/client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import UserAvatarWrapper from "../user-avatar-wrapper";
 
 const roleIcons = {
 	GUEST: null,
@@ -108,10 +108,7 @@ const MembersModal = () => {
 				<ScrollArea className="mt-8 max-h-[420px] pr-6">
 					{server?.members?.map((member) => (
 						<div key={member?.id} className="flex items-center gap-x-2 mb-6">
-							<UserAvatar
-								src={member?.profile.imageUrl}
-								isOnline={member?.profile?.isOnline}
-							/>
+							<UserAvatarWrapper profile={member?.profile} />
 							<div className="flex flex-col gap-y-1">
 								<div className="text-xs font-semibold items-center flex gap-x-1">
 									{member?.profile.name}

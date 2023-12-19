@@ -14,11 +14,11 @@ import { ActionTooltip } from "@/components/action-tooltip";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import UserAvatar from "@/components/user-avatar";
 import { useModal } from "@/hooks/use-modal-store";
 import { cn } from "@/utils/cn";
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
+import UserAvatarWrapper from "../user-avatar-wrapper";
 
 interface ChatItemProps {
 	id: string;
@@ -134,7 +134,7 @@ const ChatItem = ({
 					onClick={onMemberClick}
 					className="cursor-pointer hover:drop-shadow-md transition"
 				>
-					<UserAvatar src={member.profile.imageUrl} />
+					<UserAvatarWrapper profile={member.profile} />
 				</div>
 				<div className="flex flex-col w-full">
 					<div className="flex items-center gap-x-2">
